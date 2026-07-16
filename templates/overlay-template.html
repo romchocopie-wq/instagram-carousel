@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --color-headline: {{COLOR_HEADLINE}};
+    --color-body: {{COLOR_BODY}};
+    --color-dot-active: {{COLOR_DOT_ACTIVE}};
+    --color-dot-inactive: {{COLOR_DOT_INACTIVE}};
+    --font-family: {{FONT_FAMILY}};
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: {{WIDTH}}px;
+    height: {{HEIGHT}}px;
+    background: {{CHROMA_KEY}};
+    font-family: var(--font-family), sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+  .gradient {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: {{GRADIENT_START}}%;
+    background: linear-gradient(to bottom, rgba({{GRADIENT_COLOR}}, 0) 0%, rgba({{GRADIENT_COLOR}}, 0.55) 45%, rgba({{GRADIENT_COLOR}}, 0.92) 100%);
+  }
+  .text {
+    position: absolute;
+    left: {{SAFE_LEFT}}px;
+    right: {{SAFE_RIGHT}}px;
+    bottom: {{TEXT_BOTTOM}}px;
+  }
+  .headline {
+    color: var(--color-headline);
+    font-weight: {{HEADLINE_WEIGHT}};
+    font-size: {{HEADLINE_SIZE}}px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .body {
+    color: var(--color-body);
+    font-weight: {{BODY_WEIGHT}};
+    font-size: {{BODY_SIZE}}px;
+    line-height: {{BODY_LINE_HEIGHT}};
+  }
+  .progress-dots {
+    position: absolute;
+    bottom: {{DOTS_BOTTOM}}px;
+    left: {{SAFE_LEFT}}px;
+    display: flex;
+    gap: {{DOTS_GAP}}px;
+  }
+  .progress-dots span {
+    width: {{DOT_SIZE}}px;
+    height: {{DOT_SIZE}}px;
+    border-radius: 50%;
+    background: var(--color-dot-inactive);
+  }
+  .progress-dots span.active {
+    background: var(--color-dot-active);
+  }
+  .swipe-arrow {
+    position: absolute;
+    bottom: {{DOTS_BOTTOM}}px;
+    right: {{ARROW_RIGHT}}px;
+    color: var(--color-headline);
+    font-size: {{ARROW_SIZE}}px;
+  }
+</style>
+</head>
+<body>
+  <div class="gradient"></div>
+  <div class="text">
+    <div class="headline">{{HEADLINE}}</div>
+    <div class="body">{{BODY}}</div>
+  </div>
+  <div class="progress-dots">{{DOTS_HTML}}</div>
+  {{SWIPE_ARROW_HTML}}
+</body>
+</html>

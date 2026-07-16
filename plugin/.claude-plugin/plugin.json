@@ -1,0 +1,11 @@
+{
+  "name": "instagram-carousel",
+  "version": "1.0.0",
+  "description": "Создаёт брендированную Instagram-карусель из текста, фото и/или видео — с рендером через Playwright (Claude Code) или Pillow (Claude.ai/Cowork).",
+  "author": {
+    "name": "Roman Lugantsev"
+  },
+  "repository": "https://github.com/romchocopie-wq/instagram-carousel",
+  "license": "MIT",
+  "keywords": ["instagram", "carousel", "social-media", "claude-code-skill"]
+}

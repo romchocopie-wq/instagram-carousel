@@ -1,0 +1,30 @@
+{
+  "light": {
+    "palette": {
+      "background": "#F7F3EC",
+      "headline": "#1A1A1A",
+      "body": "#4A4A46",
+      "accent": "#C1440E",
+      "dotActive": "#1A1A1A",
+      "dotInactive": "#C9C2B4"
+    },
+    "fonts": {
+      "headline": { "family": "Georgia", "weight": 700 },
+      "body": { "family": "Georgia", "weight": 400 }
+    }
+  },
+  "vibrant": {
+    "palette": {
+      "background": "#1B1030",
+      "headline": "#FFFFFF",
+      "body": "#E4D9F7",
+      "accent": "#FF3D81",
+      "dotActive": "#FFFFFF",
+      "dotInactive": "#5B4B7A"
+    },
+    "fonts": {
+      "headline": { "family": "Arial", "weight": 800 },
+      "body": { "family": "Arial", "weight": 500 }
+    }
+  }
+}

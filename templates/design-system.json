@@ -1,0 +1,23 @@
+{
+  "formats": {
+    "portrait": { "width": 1080, "height": 1350 },
+    "square": { "width": 1080, "height": 1080 }
+  },
+  "safeArea": { "top": 90, "bottom": 90, "left": 64, "right": 64 },
+  "palette": {
+    "background": "#0F0F10",
+    "headline": "#FFFFFF",
+    "body": "#D8D8DC",
+    "accent": "#FF5A36",
+    "dotActive": "#FFFFFF",
+    "dotInactive": "#4A4A4E"
+  },
+  "fonts": {
+    "headline": { "family": "Arial", "weight": 700, "sizeCover": 88, "sizeSlide": 64 },
+    "body": { "family": "Arial", "weight": 400, "size": 40, "lineHeight": 1.35 }
+  },
+  "progressDots": { "radius": 7, "gap": 20, "bottomOffset": 48 },
+  "swipeArrow": { "size": 48, "rightOffset": 40 },
+  "photoOverlay": { "gradientColor": "10, 10, 11", "gradientStartPercent": 40 },
+  "video": { "chromaKey": "0xFF00FF", "minDurationSeconds": 3, "maxDurationSeconds": 60, "defaultDurationSeconds": 8 }
+}
