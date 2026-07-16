@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// Оркестратор: собирает всю карусель (текст/фото/видео вперемешку) одной командой
-// по манифесту slides.json, вместо ручного вызова render.js/render_video.js на каждый слайд.
+// Orchestrator: builds the whole carousel (text/photo/video mixed) with a single command
+// from a slides.json manifest, instead of manually calling render.js/render_video.js per slide.
 //
-// Использование:
+// Usage:
 //   node build_carousel.js <slides.json> <outDir> [design-system.json]
 //
-// Формат slides.json:
+// slides.json format:
 // {
 //   "format": "portrait" | "square",
 //   "slides": [
@@ -14,11 +14,11 @@
 //     { "type": "video", "source": "C:\\...\\clip.mp4", "start": null, "duration": 8, "headline": "...", "body": "...", "altText": "...", "caption": "..." }
 //   ]
 // }
-// Для видео start: null (или поле пропущено) -> берётся середина клипа через ffprobe-автодетект
-// длительности исходника, а не всегда 0-я секунда.
-// caption — необязательное поле: видимая подпись под слайдом при пролистывании (Instagram
-// Multiple Captions), отдельно от headline/body (вшиты в картинку) и altText (только для
-// доступности). Собирается в slide-captions.json рядом с alt-text.json.
+// For video, start: null (or the field omitted) -> takes the middle of the clip via ffprobe
+// auto-detection of the source's duration, instead of always second 0.
+// caption is an optional field: the visible under-slide caption while swiping (Instagram
+// Multiple Captions), separate from headline/body (baked into the image) and altText
+// (accessibility only). Collected into slide-captions.json alongside alt-text.json.
 
 const fs = require('fs');
 const path = require('path');
@@ -44,7 +44,7 @@ function buildArrow(isLast) {
   return isLast ? '' : '<div class="swipe-arrow">&#8594;</div>';
 }
 
-// Плейсхолдеры, общие для всех трёх шаблонов (текст/фото/видео-оверлей).
+// Placeholders shared by all three templates (text/photo/video overlay).
 function commonValues(design, headline, body, headlineSize, dotsHtml, arrowHtml) {
   return {
     COLOR_HEADLINE: design.palette.headline,
@@ -72,7 +72,7 @@ function commonValues(design, headline, body, headlineSize, dotsHtml, arrowHtml)
 function main() {
   const [, , manifestPath, outDir, designPathArg] = process.argv;
   if (!manifestPath || !outDir) {
-    console.error('Использование: node build_carousel.js <slides.json> <outDir> [design-system.json]');
+    console.error('Usage: node build_carousel.js <slides.json> <outDir> [design-system.json]');
     process.exit(1);
   }
 
@@ -82,12 +82,12 @@ function main() {
 
   const formatName = manifest.format || 'portrait';
   const format = design.formats[formatName];
-  if (!format) throw new Error(`Неизвестный формат: ${formatName}`);
+  if (!format) throw new Error(`Unknown format: ${formatName}`);
   const { width, height } = format;
 
   const slides = manifest.slides;
-  if (!slides || slides.length === 0) throw new Error('slides.json: пустой список слайдов');
-  if (slides.length > 10) throw new Error(`slides.json: ${slides.length} слайдов, лимит Instagram — 10`);
+  if (!slides || slides.length === 0) throw new Error('slides.json: empty slide list');
+  if (slides.length > 10) throw new Error(`slides.json: ${slides.length} slides, Instagram's limit is 10`);
 
   const textTemplate = fs.readFileSync(path.join(skillDir, 'templates', 'slide-template.html'), 'utf8');
   const photoTemplate = fs.readFileSync(path.join(skillDir, 'templates', 'slide-photo-template.html'), 'utf8');
@@ -128,10 +128,10 @@ function main() {
       fs.writeFileSync(htmlPath, html);
       screenshotHtml(htmlPath, pngPath, width, height);
       outputFiles.push(pngPath);
-      console.log(`OK: slide-${num}.png (текст, ${width}x${height})`);
+      console.log(`OK: slide-${num}.png (text, ${width}x${height})`);
 
     } else if (slide.type === 'photo') {
-      if (!fs.existsSync(slide.source)) throw new Error(`Не найдено фото: ${slide.source}`);
+      if (!fs.existsSync(slide.source)) throw new Error(`Photo not found: ${slide.source}`);
       const photoUrl = 'file:///' + path.resolve(slide.source).replace(/\\/g, '/');
       const textBottom = design.progressDots.bottomOffset + design.progressDots.radius * 2 + 32;
       const html = fillTemplate(photoTemplate, {
@@ -150,17 +150,17 @@ function main() {
       fs.writeFileSync(htmlPath, html);
       screenshotHtml(htmlPath, pngPath, width, height);
       outputFiles.push(pngPath);
-      console.log(`OK: slide-${num}.png (фото, ${width}x${height})`);
+      console.log(`OK: slide-${num}.png (photo, ${width}x${height})`);
 
     } else if (slide.type === 'video') {
-      if (!fs.existsSync(slide.source)) throw new Error(`Не найдено видео: ${slide.source}`);
+      if (!fs.existsSync(slide.source)) throw new Error(`Video not found: ${slide.source}`);
 
       const duration = slide.duration || design.video.defaultDurationSeconds;
       let start = slide.start;
       if (start === null || start === undefined) {
         const info = probeVideo(slide.source);
         start = Math.max(0, (info.duration - duration) / 2);
-        console.log(`Слайд ${num}: старт не задан, беру середину клипа (${info.duration.toFixed(1)}s) -> старт ${start.toFixed(1)}s`);
+        console.log(`Slide ${num}: no start given, using the middle of the clip (${info.duration.toFixed(1)}s) -> start ${start.toFixed(1)}s`);
       }
 
       const textBottom = design.progressDots.bottomOffset + design.progressDots.radius * 2 + 32;
@@ -186,10 +186,10 @@ function main() {
         width, height, start, duration, chromaKey: design.video.chromaKey,
       });
       outputFiles.push(mp4Path);
-      console.log(`OK: slide-${num}.mp4 (видео, ${width}x${height}, старт ${start.toFixed(1)}s, ${usedDuration}s)`);
+      console.log(`OK: slide-${num}.mp4 (video, ${width}x${height}, start ${start.toFixed(1)}s, ${usedDuration}s)`);
 
     } else {
-      throw new Error(`Слайд ${num}: неизвестный тип "${slide.type}" (ожидался text/photo/video)`);
+      throw new Error(`Slide ${num}: unknown type "${slide.type}" (expected text/photo/video)`);
     }
   });
 
@@ -201,7 +201,7 @@ function main() {
   const captionsPath = path.join(outDir, 'slide-captions.json');
   fs.writeFileSync(captionsPath, JSON.stringify(captions, null, 2), 'utf8');
 
-  console.log(`Готово: carousel.zip (${outputFiles.length} слайдов), alt-text.json, slide-captions.json`);
+  console.log(`Done: carousel.zip (${outputFiles.length} slides), alt-text.json, slide-captions.json`);
 }
 
 main();

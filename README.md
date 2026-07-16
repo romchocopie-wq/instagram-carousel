@@ -1,98 +1,104 @@
+*[Русская версия](README.ru.md) — a synced Russian translation is also available.*
+
 # Instagram Carousel
 
-Claude Code skill для создания брендированной Instagram-карусели из текста,
-фото и/или видео. Собирает контент и стиль, строит слайд-бриф с обязательным
-подтверждением, затем рендерит готовые слайды — одной командой, даже если
-карусель смешанная (текст + фото + видео вперемешку).
+A Claude Code skill for creating a branded Instagram carousel from text,
+photos, and/or video. Gathers content and style, builds a slide brief that
+requires explicit confirmation, then renders the finished slides — with a
+single command, even for a mixed carousel (text + photo + video combined).
 
 ![preview](docs/preview/slide-01.png)
 
-## Возможности
+## Features
 
-- **Формат** — 4:5 (1080×1350) или 1:1 (1080×1080), до 10 слайдов.
-- **Стиль** — свой `brand-kit.md`, готовые пресеты (`light`/`vibrant`/дефолтный
-  тёмный) или палитра, извлечённая из присланных референсов.
-- **Два независимых рендерера**: HTML+Playwright (Claude Code, локально) и
-  чистый Python+Pillow (Claude.ai/Cowork, без сети/Node.js) — скилл сам
-  определяет доступную среду. Есть и режим без рендера — готовые
-  Gemini/Nano Banana промпты вручную.
-- **Видео-слайды** (Claude Code only) — обрезка, кроп, наложение текстового
-  оверлея через ffmpeg (chroma-key), 3-60 секунд на клип.
-- **Alt-текст** и **per-slide captions** (Instagram Multiple Captions) —
-  отдельные текстовые слои поверх обычной общей подписи.
-- **Сортировка фото по EXIF** — для тревел-каруселей, с честным откатом на
-  дату изменения файла, если EXIF отсутствует (частый случай для фото из
-  мессенджеров).
-- **Tone-of-voice** — если в проекте есть `voice.md`/`tone-of-voice.md`,
-  скилл подхватывает голос для текста слайдов и подписи; без файла — нейтральный тон.
+- **Format** — 4:5 (1080×1350) or 1:1 (1080×1080), up to 10 slides.
+- **Style** — your own `brand-kit.md`, ready-made presets (`light`/`vibrant`/
+  default dark), or a palette extracted from references you send.
+- **Two independent renderers**: HTML+Playwright (Claude Code, local) and
+  pure Python+Pillow (Claude.ai/Cowork, no network/Node.js) — the skill
+  detects the available environment itself. There's also a no-render mode —
+  ready-made Gemini/Nano Banana prompts by hand.
+- **Video slides** (Claude Code only) — trim, crop, text overlay via ffmpeg
+  (chroma key), 3-60 seconds per clip.
+- **Alt text** and **per-slide captions** (Instagram Multiple Captions) —
+  separate text layers on top of the regular unified caption.
+- **Photo sorting by EXIF** — for travel carousels, with an honest fallback
+  to file modification date when EXIF is missing (common for photos from
+  messaging apps).
+- **Tone-of-voice** — if the project has a `voice.md`/`tone-of-voice.md`,
+  the skill picks up the voice for slide text and the caption; without one,
+  it defaults to a neutral tone.
 
-## Зависимости
+## Dependencies
 
-| Рендерер | Нужно | Где работает |
+| Renderer | Requires | Where it works |
 |---|---|---|
-| `render.js` / `build_carousel.js` (HTML+Playwright) | Node.js, `npx playwright` (Chromium) | Claude Code, локально |
+| `render.js` / `build_carousel.js` (HTML+Playwright) | Node.js, `npx playwright` (Chromium) | Claude Code, local |
 | `render_pillow.py` | Python 3 + Pillow | Claude.ai, Cowork, Claude Code |
-| `render_video.js` | ffmpeg в PATH | Claude Code, локально |
-| Gemini-режим | — (только текстовые промпты) | везде |
+| `render_video.js` | ffmpeg on PATH | Claude Code, local |
+| Gemini mode | — (text prompts only) | anywhere |
 
-## Установка
+## Installation
 
-### Вариант A — как обычный skill
+### Option A — as a regular skill
 
 ```bash
 git clone https://github.com/romchocopie-wq/instagram-carousel.git ~/.claude/skills/instagram-carousel
 ```
 
-(на Windows — в `%USERPROFILE%\.claude\skills\instagram-carousel`)
+(on Windows — into `%USERPROFILE%\.claude\skills\instagram-carousel`)
 
-### Вариант B — как плагин Claude Code
+### Option B — as a Claude Code plugin
 
-Плагин лежит в поддиректории [`plugin/`](./plugin). Локально:
+The plugin lives in the [`plugin/`](./plugin) subdirectory. Locally:
 
 ```bash
 git clone https://github.com/romchocopie-wq/instagram-carousel.git
 claude --plugin-dir instagram-carousel/plugin
 ```
 
-Либо скопируй содержимое `plugin/` в директорию, где Claude Code ищет
-установленные плагины.
+Or copy the contents of `plugin/` into wherever Claude Code looks for
+installed plugins.
 
-## Использование
+## Usage
 
-В новом чате Claude Code написать что-то вроде «сделай карусель для инстаграм
-про [тема]» — скилл триггернется сам и проведёт через уточняющие вопросы
-(формат, стиль, число слайдов, способ рендера), затем покажет бриф на
-подтверждение и только после этого сгенерирует слайды.
+In a new Claude Code chat, write something like "make an Instagram carousel
+about [topic]" — the skill triggers itself and walks through clarifying
+questions (format, style, slide count, render method), then shows the brief
+for confirmation, and only then generates the slides.
 
-## Структура репозитория
+## Repository structure
 
 ```
 instagram-carousel/
-├── SKILL.md                     # сам skill — вариант A (простая установка)
+├── SKILL.md                      # the skill itself, English (primary) — option A
+├── SKILL.ru.md                    # the same skill, Russian translation
 ├── scripts/
-│   ├── lib.js                    # общие хелперы (скриншот HTML, ZIP, ffmpeg-композит, ffprobe)
-│   ├── render.js                 # Node+Playwright рендерер (Claude Code)
-│   ├── render_pillow.py          # Python+Pillow рендерер (Claude.ai/Cowork)
-│   ├── render_video.js           # ffmpeg: обрезка + кроп + chroma-key оверлей видео-слайда
-│   ├── build_carousel.js         # оркестратор: вся карусель одной командой по slides.json
-│   └── sort_photos_by_exif.py    # сортировка фото по EXIF для тревел-каруселей
+│   ├── lib.js                     # shared helpers (HTML screenshot, ZIP, ffmpeg compositing, ffprobe)
+│   ├── render.js                  # Node+Playwright renderer (Claude Code)
+│   ├── render_pillow.py           # Python+Pillow renderer (Claude.ai/Cowork)
+│   ├── render_video.js            # ffmpeg: trim + crop + chroma-key overlay for a video slide
+│   ├── build_carousel.js          # orchestrator: the whole carousel in one command from slides.json
+│   └── sort_photos_by_exif.py     # sorts photos by EXIF for travel carousels
 ├── templates/
-│   ├── slide-template.html       # текстовый слайд
-│   ├── slide-photo-template.html # фото-слайд (фон-фото + градиент + текст)
-│   ├── overlay-template.html     # текстовый оверлей на chroma-key фоне для видео
-│   ├── design-system.json        # константы дизайна для всех рендереров
-│   ├── design-presets.json       # готовые стили (light/vibrant)
-│   └── brand-kit-template.md     # стартовый шаблон brand-kit.md
+│   ├── slide-template.html        # text slide
+│   ├── slide-photo-template.html  # photo slide (background photo + gradient + text)
+│   ├── overlay-template.html      # text overlay on a chroma-key background for video
+│   ├── design-system.json         # design constants shared by all renderers
+│   ├── design-presets.json        # ready-made styles (light/vibrant)
+│   └── brand-kit-template.md      # brand-kit.md starter template
 ├── references/
-│   └── design-patterns.md        # структура слайдов, лимиты платформы, паттерны
-├── docs/preview/                 # примеры сгенерированных слайдов (синтетические демо-данные)
-├── plugin/                       # обёртка под плагин — вариант B
+│   ├── design-patterns.md         # slide structure, platform limits, patterns (EN, primary)
+│   └── design-patterns.ru.md       # the same file, Russian translation
+├── docs/preview/                  # sample generated slides (synthetic demo data)
+├── plugin/                        # plugin wrapper — option B
 │   ├── .claude-plugin/plugin.json
 │   └── skills/instagram-carousel/
 ├── LICENSE
-└── README.md
+├── README.md                      # English (primary)
+└── README.ru.md                    # this file's Russian counterpart
 ```
 
-## Лицензия
+## License
 
-MIT — см. [LICENSE](./LICENSE).
+MIT — see [LICENSE](./LICENSE).

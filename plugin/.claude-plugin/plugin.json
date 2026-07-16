@@ -1,7 +1,7 @@
 {
   "name": "instagram-carousel",
   "version": "1.0.0",
-  "description": "Создаёт брендированную Instagram-карусель из текста, фото и/или видео — с рендером через Playwright (Claude Code) или Pillow (Claude.ai/Cowork).",
+  "description": "Creates a branded Instagram carousel from text, photos, and/or video — rendered via Playwright (Claude Code) or Pillow (Claude.ai/Cowork).",
   "author": {
     "name": "Roman Lugantsev"
   },

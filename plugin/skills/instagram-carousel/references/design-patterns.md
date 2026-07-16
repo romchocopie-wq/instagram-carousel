@@ -1,67 +1,69 @@
-# Паттерны Instagram-каруселей
+*[Русская версия](design-patterns.ru.md) — a synced Russian translation is also available.*
 
-Источник: разбор туториала из Instagram Reel (@miroslava_dmitrieva, 6 промптов для генерации HTML-каруселей).
+# Instagram Carousel Patterns
 
-## Структура слайдов
+Source: a breakdown of an Instagram Reel tutorial (@miroslava_dmitrieva, 6 prompts for generating HTML carousels).
 
-- **Слайд 1 — обложка / hook.** Крупный заголовок, цепляющий вопрос или обещание. Единственная задача — заставить пролистнуть дальше.
-- **Слайды 2…N-1 — value.** Одна мысль на слайд, ≤25 слов текста. Постепенное наращивание ценности: от простого к инсайту.
-- **Последний слайд — CTA.** Призыв подписаться/сохранить/написать в комментарии. Визуально выделен (акцентный фон или контраст), чтобы "сохранение" читалось как логичный следующий шаг.
+## Slide structure
 
-## Лимиты платформы
+- **Slide 1 — cover / hook.** A large headline, an attention-grabbing question, or a promise. Its only job is to get the viewer to swipe further.
+- **Slides 2…N-1 — value.** One idea per slide, ≤25 words of text. Value builds gradually — from the basic to the insightful.
+- **Last slide — CTA.** A call to follow/save/comment. Visually distinct (an accent background or contrast) so that "saving" reads as the obvious next step.
 
-- Максимум **10 слайдов** на карусель Instagram.
-- Рекомендуемое число слайдов: 6, 8 или 10 — чётное количество упрощает баланс hook/value/CTA.
-- Форматы: **1:1 (1080×1080)** или **4:5 (1080×1350)**. 4:5 занимает больше места в ленте — предпочтительный дефолт.
-- Видео-слайд: **3-60 секунд** на один клип, MP4/MOV (H.264 + AAC), то же соотношение сторон, что у остальных слайдов. В ленте видео проигрывается без звука по умолчанию и зацикливается, пока слайд в кадре. Фото и видео свободно комбинируются в одной карусели (сумма элементов ≤10).
+## Platform limits
 
-## Свайп-аффордансы
+- Maximum **10 slides** per Instagram carousel.
+- Recommended slide counts: 6, 8, or 10 — an even number makes balancing hook/value/CTA easier.
+- Formats: **1:1 (1080×1080)** or **4:5 (1080×1350)**. 4:5 takes up more feed space — the preferred default.
+- Video slide: **3-60 seconds** per clip, MP4/MOV (H.264 + AAC), the same aspect ratio as the rest of the slides. In-feed video plays muted by default and loops while the slide is in view. Photos and video can be freely mixed in one carousel (total elements ≤10).
 
-- Индикатор прогресса (точки) внизу слайда — показывает, сколько слайдов осталось.
-- Стрелка "листай дальше" в правом нижнем углу на всех слайдах, кроме последнего.
-- Безопасные отступы (safe area) сверху/снизу — чтобы текст не перекрывался иконками интерфейса Instagram при просмотре.
+## Swipe affordances
 
-## Извлечение дизайн-системы из референсов
+- A progress indicator (dots) at the bottom of the slide — shows how many slides are left.
+- A "swipe for more" arrow in the bottom-right corner on every slide except the last.
+- Safe-area padding at the top/bottom — so text doesn't get covered by Instagram's interface icons while viewing.
 
-Если пользователь присылает 2-3 карусели/слайда, которые ему нравятся, вместо того чтобы придумывать стиль с нуля:
+## Extracting a design system from references
 
-1. Определить общую hex-палитру (фон, текст, акцент).
-2. Определить шрифтовую пару и жирность заголовков/текста.
-3. Определить характер отступов и композиции (центрировано / выровнено по левому краю / плотное или воздушное).
-4. Зафиксировать эти параметры как значения `design-system.json` для конкретного проекта — переиспользовать во всех последующих каруселях этого клиента/бренда.
+If the user sends 2-3 carousels/slides they like, instead of inventing a style from scratch:
 
-## Готовые пресеты и повторное использование стиля
+1. Determine a shared hex palette (background, text, accent).
+2. Determine the font pairing and the weight for headlines/body text.
+3. Determine the spacing and composition character (centered / left-aligned / dense or airy).
+4. Lock these parameters in as `design-system.json` values for that specific project — reuse them across every subsequent carousel for that client/brand.
 
-- `templates/design-presets.json` содержит 2 готовых альтернативы дефолтному тёмному стилю: `light` (кремовый фон, Georgia, терракотовый акцент — редакционный/бумажный вид) и `vibrant` (глубокий фиолетовый фон, жирный Arial, ярко-розовый акцент — контрастный/молодёжный вид). Пресет переопределяет только `palette` и `fonts.*.family/weight` — размеры/отступы/dots/стрелка всегда берутся из `design-system.json`.
-- `templates/brand-kit-template.md` — стартовый файл для повторяющегося клиента/бренда: один раз заполняется реальными hex-кодами/шрифтом и сохраняется как `brand-kit.md` в проекте, дальше скилл читает его сам без повторного опроса стиля.
+## Ready-made presets and style reuse
 
-## Порядок фото для травел-каруселей
+- `templates/design-presets.json` contains 2 ready-made alternatives to the default dark style: `light` (cream background, Georgia, terracotta accent — an editorial/paper look) and `vibrant` (deep purple background, bold Arial, bright pink accent — a high-contrast/youthful look). A preset only overrides `palette` and `fonts.*.family/weight` — sizes/spacing/dots/arrow always come from `design-system.json`.
+- `templates/brand-kit-template.md` — a starter file for a recurring client/brand: fill it in once with real hex codes/fonts and save it as `brand-kit.md` in the project, and the skill will read it automatically afterward without re-asking about style.
 
-Реальные фото, особенно скачанные через мессенджеры, часто приходят без EXIF (метаданные вырезаются при пересжатии) — `scripts/sort_photos_by_exif.py` пробует EXIF `DateTimeOriginal`, а при его отсутствии откатывается на дату изменения файла с явной пометкой в выводе. Не считать mtime-порядок надёжным без предупреждения пользователя — это лишь приближение к реальной хронологии съёмки.
+## Photo order for travel carousels
 
-## Голос письма (tone-of-voice)
+Real photos, especially ones downloaded through messaging apps, often arrive without EXIF (metadata gets stripped during recompression) — `scripts/sort_photos_by_exif.py` tries the EXIF `DateTimeOriginal` field, and falls back to the file's modification date with an explicit marker in the output when it's absent. Don't treat mtime-based order as reliable without warning the user — it's only an approximation of the real shooting chronology.
 
-Отдельно от визуального стиля (brand-kit.md/пресеты) можно подключить голос — как именно писать текст. Скилл ищет `voice.md`, затем `tone-of-voice.md` в корне проекта, либо читает явно названный пользователем источник (файл или другой скилл) — без хардкода конкретного канала/бренда, потому что у одного пользователя может быть несколько разных голосов для разных проектов (проверено на двух реальных, но независимых друг от друга голосах: один — тёплый гид-практик с эмодзи-маркерами списков и CTA в бот; другой — со списками разрешённых/запрещённых слов, таблицей эмодзи, хэштегами в начале поста и обязательным закрывающим вопросом. Они частично противоречат друг другу — именно поэтому источник не зашит в скилл, а определяется по проекту).
+## Voice (tone-of-voice)
 
-Голос, рассчитанный на полноценный пост (обычно 1000+ знаков), физически не помещается в лимиты слайда карусели (заголовок ≤8 слов, текст ≤25 слов). Разделение ответственности:
-- **На слайдах** — только лексика, регистр обращения и характерные обороты из референса. Полная структура поста (opener/closer/хэштеги/порядок) на слайд не переносится.
-- **В подписи к посту** (без ограничения по длине) — голос применяется полнее, включая структурные конвенции, потому что формат подписи ближе к обычному посту, для которого голос и описан.
+Separately from visual style (brand-kit.md/presets), a voice can be plugged in — how exactly to write the text. The skill looks for `voice.md`, then `tone-of-voice.md` in the project root, or reads a source the user explicitly named (a file or another skill) — without hardcoding any specific channel/brand, because a single user can have several different voices for different projects (verified on two real but mutually independent voices: one is a warm, hands-on guide with emoji list markers and a CTA into a bot; the other uses lists of allowed/banned words, an emoji table, hashtags at the start of the post, and a mandatory closing question. They partially contradict each other — which is exactly why the source isn't hardcoded into the skill and is instead determined per project).
 
-При конфликте голоса с жёсткими лимитами карусели лимиты карусели всегда побеждают.
+A voice designed for a full post (usually 1000+ characters) physically doesn't fit within a carousel slide's limits (headline ≤8 words, text ≤25 words). Division of responsibility:
+- **On the slides** — only vocabulary, register of address, and characteristic turns of phrase from the reference. The full post structure (opener/closer/hashtags/order) doesn't carry over to a slide.
+- **In the post caption** (no length limit) — the voice is applied more fully, including structural conventions, because the caption format is closer to a regular post, which is what the voice reference was written for in the first place.
 
-## Alt-текст
+When the voice conflicts with the carousel's hard limits, the carousel's limits always win.
 
-У каждого слайда карусели в Instagram может быть отдельное alt-описание (доступность, немного SEO) — это не то же самое, что headline/body на самом слайде или подпись к посту. `build_carousel.js`/`render_pillow.py` собирают alt-текст из поля `altText` манифеста в `alt-text.json` рядом с готовыми слайдами.
+## Alt text
+
+Every slide in an Instagram carousel can have a separate alt description (accessibility, a bit of SEO) — this isn't the same thing as the headline/body on the slide itself or the post caption. `build_carousel.js`/`render_pillow.py` collect alt text from the manifest's `altText` field into `alt-text.json` alongside the finished slides.
 
 ## Per-slide captions (Instagram Multiple Captions)
 
-С июня 2026 (раскатано 18-19 июня, источник — разбор `@lena.mozg`, подтверждено независимо Engadget/Digital Trends/Fast Company и др.) Instagram при публикации карусели даёт переключить режим подписи: одна подпись на весь пост (как раньше) ИЛИ своя подпись на каждый слайд (до 20 слайдов), которая показывается снизу экрана при пролистывании — контекст не теряется при свайпе. Режим выбирается пользователем в интерфейсе Instagram на публикации, не в скилле.
+Since June 2026 (rolled out June 18-19, source: a breakdown by `@lena.mozg`, independently confirmed by Engadget/Digital Trends/Fast Company and others), Instagram lets users switch the caption mode when publishing a carousel: one caption for the whole post (as before) OR a separate caption on each slide (up to 20 slides), shown at the bottom of the screen while swiping — so context isn't lost while swiping. The mode is chosen by the user in the Instagram interface at publish time, not in the skill.
 
-Это третий, отдельный текстовый слой — не то же самое, что headline/body (вшито в картинку, жёсткий лимит слов) и не то же самое, что altText (невидим, только для доступности). `build_carousel.js`/`render_pillow.py` собирают caption из поля `caption` манифеста в `slide-captions.json`, генерируется всегда вместе с обычной единой подписью поста (Шаг 4), а не вместо неё — пользователь сам решает на публикации, какой из двух готовых вариантов использовать.
+This is a third, separate text layer — not the same thing as the headline/body (baked into the image, a hard word limit) and not the same thing as altText (invisible, accessibility only). `build_carousel.js`/`render_pillow.py` collect the caption from the manifest's `caption` field into `slide-captions.json`, always generated alongside the regular unified post caption (Step 4), not instead of it — the user decides at publish time which of the two ready options to use.
 
-## Реанимация неудачной карусели
+## Reviving an underperforming carousel
 
-Если карусель уже была опубликована, но не "зашла":
-- Усилить hook на первом слайде (сделать конкретнее/провокационнее).
-- Убрать самый слабый по ценности слайд.
-- Переписать CTA так, чтобы "сохранить" ощущалось как очевидное действие, а не просьба.
+If a carousel has already been published but didn't perform well:
+- Strengthen the hook on the first slide (make it more specific/provocative).
+- Remove the weakest-value slide.
+- Rewrite the CTA so that "saving" feels like the obvious action, not a request.

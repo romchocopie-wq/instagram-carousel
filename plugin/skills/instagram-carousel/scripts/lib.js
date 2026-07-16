@@ -1,16 +1,17 @@
-// Общие хелперы для render.js / render_video.js / build_carousel.js.
-// Ничего не выполняет сам по себе — только экспортирует функции.
+// Shared helpers for render.js / render_video.js / build_carousel.js.
+// Doesn't do anything on its own — only exports functions.
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// cmd.exe не экранирует аргументы сам — оборачиваем в кавычки и удваиваем внутренние кавычки.
+// cmd.exe doesn't escape arguments itself — wrap in quotes and double internal quotes.
 function quoteArg(arg) {
   return `"${String(arg).replace(/"/g, '""')}"`;
 }
 
-// Скриншотит один HTML-файл в PNG нужного разрешения через CLI `npx playwright screenshot`.
+// Screenshots a single HTML file into a PNG at the target resolution via the
+// `npx playwright screenshot` CLI.
 function screenshotHtml(htmlPath, pngPath, width, height) {
   const npxCmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
   const fileUrl = 'file:///' + path.resolve(htmlPath).replace(/\\/g, '/');
@@ -23,16 +24,16 @@ function screenshotHtml(htmlPath, pngPath, width, height) {
   execSync(cmd, { stdio: 'inherit' });
 }
 
-// Обрезка + масштаб/кроп под целевой размер + наложение текстового оверлея через chroma-key.
-// Возвращает фактически применённую длительность (после зажатия в лимит 3-60с).
+// Trim + scale/crop to the target size + overlay text via chroma key.
+// Returns the actually applied duration (after clamping to the 3-60s limit).
 function renderVideoSlide({ input, overlay, output, width, height, start = 0, duration = 8, chromaKey = '0xFF00FF' }) {
-  if (!fs.existsSync(input)) throw new Error(`Не найден входной файл: ${input}`);
-  if (!fs.existsSync(overlay)) throw new Error(`Не найден оверлей: ${overlay}`);
+  if (!fs.existsSync(input)) throw new Error(`Input file not found: ${input}`);
+  if (!fs.existsSync(overlay)) throw new Error(`Overlay not found: ${overlay}`);
 
-  // Жёсткий лимит Instagram для видео-слайда карусели: 3-60 секунд.
+  // Instagram's hard limit for a carousel video slide: 3-60 seconds.
   const clampedDuration = Math.min(60, Math.max(3, duration));
   if (clampedDuration !== duration) {
-    console.log(`Длительность скорректирована под лимит Instagram (3-60с): ${duration}s -> ${clampedDuration}s`);
+    console.log(`Duration adjusted to Instagram's limit (3-60s): ${duration}s -> ${clampedDuration}s`);
   }
 
   const filter = [
@@ -57,7 +58,7 @@ function renderVideoSlide({ input, overlay, output, width, height, start = 0, du
   return clampedDuration;
 }
 
-// ffprobe: разрешение и длительность видео.
+// ffprobe: video resolution and duration.
 function probeVideo(videoPath) {
   const cmd = [
     'ffprobe', '-v', 'error',
@@ -77,7 +78,7 @@ function probeVideo(videoPath) {
   };
 }
 
-// Простая ZIP-упаковка без внешних npm-зависимостей (store, без сжатия).
+// A simple ZIP packer with no external npm dependencies (store method, no compression).
 function zipFiles(filePaths, zipPath) {
   const chunks = [];
   const centralDirectory = [];

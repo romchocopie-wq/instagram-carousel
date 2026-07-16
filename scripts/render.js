@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-// Рендерит slide-*.html из папки в PNG нужного разрешения через CLI `npx playwright screenshot`
-// и упаковывает результат в carousel.zip. HTML-слайды уже свёрстаны в целевом размере
-// (см. templates/slide-template.html), поэтому скриншот снимается 1:1, без масштабирования.
+// Renders slide-*.html files from a folder into PNGs at the target resolution via the
+// `npx playwright screenshot` CLI, then packs the result into carousel.zip. The HTML slides
+// are already laid out at the target size (see templates/slide-template.html), so the
+// screenshot is taken 1:1, without scaling.
 //
-// Использование:
-//   node render.js <папка_со_слайдами> <ширина> <высота>
-// Пример:
+// Usage:
+//   node render.js <slides_folder> <width> <height>
+// Example:
 //   node render.js ./out 1080 1350
 
 const fs = require('fs');
@@ -15,7 +16,7 @@ const { screenshotHtml, zipFiles } = require('./lib');
 function main() {
   const [, , dir, widthArg, heightArg] = process.argv;
   if (!dir) {
-    console.error('Использование: node render.js <папка_со_слайдами> [ширина=1080] [высота=1350]');
+    console.error('Usage: node render.js <slides_folder> [width=1080] [height=1350]');
     process.exit(1);
   }
 
@@ -27,7 +28,7 @@ function main() {
     .sort();
 
   if (files.length === 0) {
-    console.error(`В папке ${dir} не найдено файлов slide-NN.html`);
+    console.error(`No slide-NN.html files found in ${dir}`);
     process.exit(1);
   }
 
@@ -45,7 +46,7 @@ function main() {
   }
 
   zipFiles(pngPaths, path.join(dir, 'carousel.zip'));
-  console.log(`Готово: carousel.zip (${pngPaths.length} слайдов)`);
+  console.log(`Done: carousel.zip (${pngPaths.length} slides)`);
 }
 
 main();

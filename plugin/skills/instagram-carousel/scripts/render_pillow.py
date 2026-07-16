@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """
-Рендерит слайды карусели через Pillow (без Node/браузера) — для песочниц
-Claude.ai / Cowork, где Playwright недоступен.
+Renders carousel slides via Pillow (no Node/browser) — for sandboxes like
+Claude.ai / Cowork, where Playwright isn't available.
 
-Использование:
+Usage:
     python render_pillow.py slides.json [design-system.json] [out_dir]
 
-slides.json — список слайдов вида:
+slides.json — a list of slides shaped like:
     [
-      {"headline": "Заголовок", "body": "Текст слайда", "caption": "Подпись под слайдом (необязательно)"},
+      {"headline": "Headline", "body": "Slide text", "caption": "Under-slide caption (optional)"},
       ...
     ]
 
-caption — необязательное поле: видимая подпись под слайдом при пролистывании (Instagram
-Multiple Captions), отдельно от headline/body (вшиты в картинку). Собирается в slide-captions.json.
+caption is an optional field: the visible under-slide caption while swiping (Instagram
+Multiple Captions), separate from headline/body (baked into the image). Collected into
+slide-captions.json.
 """
 import json
 import os
@@ -32,8 +33,8 @@ def load_json(path):
 
 
 def get_font(family, size, weight):
-    # В песочнице нет гарантии наличия конкретного TTF-файла Arial,
-    # поэтому пробуем несколько стандартных путей и откатываемся на default.
+    # The sandbox has no guarantee a specific Arial TTF file exists,
+    # so try a few standard paths and fall back to the default font.
     candidates = []
     if weight >= 600:
         candidates += ["DejaVuSans-Bold.ttf", "Arial Bold.ttf", "arialbd.ttf"]
@@ -78,14 +79,14 @@ def render_slide(slide, index, total, design, target_width, target_height, out_p
     content_right = target_width - safe["right"]
     content_width = content_right - content_left
 
-    # Акцентная полоска
+    # Accent bar
     accent_y = safe["top"]
     draw.rectangle(
         [content_left, accent_y, content_left + 56, accent_y + 6],
         fill=palette["accent"],
     )
 
-    # Заголовок
+    # Headline
     headline_size = fonts["headline"]["sizeCover"] if index == 0 else fonts["headline"]["sizeSlide"]
     headline_font = get_font(fonts["headline"]["family"], headline_size, fonts["headline"]["weight"])
     headline_lines = wrap_text(draw, slide["headline"], headline_font, content_width)
@@ -109,7 +110,7 @@ def render_slide(slide, index, total, design, target_width, target_height, out_p
         draw.text((content_left, y), line, font=body_font, fill=palette["body"])
         y += fonts["body"]["size"] + line_gap
 
-    # Индикатор слайдов
+    # Slide progress indicator
     dot_r = dots_cfg["radius"]
     dot_gap = dots_cfg["gap"]
     dots_y = target_height - dots_cfg["bottomOffset"]
@@ -122,7 +123,7 @@ def render_slide(slide, index, total, design, target_width, target_height, out_p
         )
         dots_x += dot_r * 2 + dot_gap
 
-    # Стрелка "листай дальше" на всех слайдах, кроме последнего
+    # "Swipe for more" arrow on every slide except the last
     if index < total - 1:
         arrow_size = arrow_cfg["size"]
         ax = target_width - arrow_cfg["rightOffset"] - arrow_size
@@ -135,7 +136,7 @@ def render_slide(slide, index, total, design, target_width, target_height, out_p
 
 def main():
     if len(sys.argv) < 2:
-        print("Использование: python render_pillow.py slides.json [design-system.json] [out_dir]")
+        print("Usage: python render_pillow.py slides.json [design-system.json] [out_dir]")
         sys.exit(1)
 
     slides_path = sys.argv[1]
@@ -171,7 +172,7 @@ def main():
     with open(captions_path, "w", encoding="utf-8") as f:
         json.dump(captions, f, ensure_ascii=False, indent=2)
 
-    print(f"Готово: carousel.zip ({len(png_paths)} слайдов), slide-captions.json")
+    print(f"Done: carousel.zip ({len(png_paths)} slides), slide-captions.json")
 
 
 if __name__ == "__main__":

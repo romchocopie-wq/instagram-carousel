@@ -1,32 +1,35 @@
 # Brand Kit
 
-Заполни один раз для проекта/клиента — при следующих каруселях скилл `instagram-carousel`
-подхватит эти значения автоматически вместо того, чтобы каждый раз собирать стиль заново.
+Fill this in once per project/client — for the next carousels, the
+`instagram-carousel` skill will pick up these values automatically instead of
+collecting the style from scratch every time.
 
-## Палитра
+## Palette
 
-| Роль | Hex |
+| Role | Hex |
 |---|---|
-| Фон | `#0F0F10` |
-| Заголовок | `#FFFFFF` |
-| Текст | `#D8D8DC` |
-| Акцент | `#FF5A36` |
-| Точка прогресса (активная) | `#FFFFFF` |
-| Точка прогресса (неактивная) | `#4A4A4E` |
+| Background | `#0F0F10` |
+| Headline | `#FFFFFF` |
+| Text | `#D8D8DC` |
+| Accent | `#FF5A36` |
+| Progress dot (active) | `#FFFFFF` |
+| Progress dot (inactive) | `#4A4A4E` |
 
-## Типографика
+## Typography
 
-- Шрифт заголовка: `Arial`, начертание `700`
-- Шрифт текста: `Arial`, начертание `400`
-- Размер заголовка (обложка): `88px`
-- Размер заголовка (обычный слайд): `64px`
-- Размер текста: `40px`
+- Headline font: `Arial`, weight `700`
+- Body font: `Arial`, weight `400`
+- Headline size (cover): `88px`
+- Headline size (regular slide): `64px`
+- Body text size: `40px`
 
-## Тон и стиль
+## Tone and style
 
-Опиши словами — используется как ориентир при генерации текста слайдов и подписи:
-- Например: "минимализм, короткие фразы, без восклицательных знаков" или "дружелюбно, разговорно, эмодзи не используем".
+Describe it in words — used as a reference when generating slide text and the caption:
+- Example: "minimalist, short phrases, no exclamation marks" or "friendly, conversational, no emoji".
 
 ---
 
-*Как использовать: замени значения выше на свои и сохрани файл как `brand-kit.md` в корне проекта. Скилл `instagram-carousel` прочитает его, если он есть, вместо дефолтной палитры из `design-system.json`.*
+*How to use: replace the values above with your own and save the file as `brand-kit.md`
+in the project root. The `instagram-carousel` skill will read it if present, instead of
+the default palette from `design-system.json`.*

@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
-Сортирует фото по времени съёмки для травел-каруселей: сначала пробует EXIF
-DateTimeOriginal/DateTime, если в файле метаданных нет (частый случай для фото,
-скачанных через мессенджеры — EXIF обычно вырезается при пересжатии) — откатывается
-на дату изменения файла (mtime) и явно помечает это в выводе, чтобы не выдавать
-недостоверный порядок за точный.
+Sorts photos by shooting time for travel carousels: tries the EXIF
+DateTimeOriginal/DateTime field first; if a file has no such metadata (common
+for photos downloaded through messaging apps — EXIF is usually stripped
+during recompression), falls back to the file's modification date (mtime)
+and marks this explicitly in the output, so an unreliable order isn't
+presented as exact.
 
-Использование:
-    python sort_photos_by_exif.py <папка_с_фото> [выходной.json]
+Usage:
+    python sort_photos_by_exif.py <photo_folder> [output.json]
 
-Выводит JSON-список объектов {file, timestamp, source} в порядке по времени
-съёмки (source: "exif" или "mtime_fallback"), плюс печатает тот же список в stdout.
+Prints a JSON list of {file, timestamp, source} objects in shooting-time
+order (source: "exif" or "mtime_fallback"), and also prints the same list to
+stdout.
 """
 import json
 import os
@@ -35,9 +37,9 @@ def read_exif_datetime(path):
             for tag_name in DATETIME_TAGS:
                 tag_id = TAG_IDS.get(tag_name)
                 if tag_id and tag_id in exif:
-                    # Формат EXIF: "YYYY:MM:DD HH:MM:SS"
+                    # EXIF format: "YYYY:MM:DD HH:MM:SS"
                     raw = exif[tag_id]
-                    return raw.replace(":", "-", 2)  # -> "YYYY-MM-DD HH:MM:SS", сортируется как строка
+                    return raw.replace(":", "-", 2)  # -> "YYYY-MM-DD HH:MM:SS", sorts as a string
     except Exception:
         return None
     return None
@@ -45,7 +47,7 @@ def read_exif_datetime(path):
 
 def main():
     if len(sys.argv) < 2:
-        print("Использование: python sort_photos_by_exif.py <папка_с_фото> [выходной.json]")
+        print("Usage: python sort_photos_by_exif.py <photo_folder> [output.json]")
         sys.exit(1)
 
     folder = sys.argv[1]
@@ -71,8 +73,8 @@ def main():
     exif_count = sum(1 for e in entries if e["source"] == "exif")
     fallback_count = len(entries) - exif_count
     if fallback_count:
-        print(f"Внимание: у {fallback_count} из {len(entries)} фото нет EXIF-даты съёмки — "
-              f"порядок для них определён по дате изменения файла (менее надёжно).", file=sys.stderr)
+        print(f"Warning: {fallback_count} of {len(entries)} photos have no EXIF shooting date — "
+              f"their order was determined by file modification date (less reliable).", file=sys.stderr)
 
     output = json.dumps(entries, ensure_ascii=False, indent=2)
     print(output)

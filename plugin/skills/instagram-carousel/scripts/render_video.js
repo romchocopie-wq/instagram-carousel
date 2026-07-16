@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Собирает видео-слайд карусели: обрезка по длительности, масштаб+кроп под целевой размер
-// (аналог CSS background-size:cover), наложение текстового оверлея через chroma-key.
-// Оверлей — это PNG, отрендеренный из templates/overlay-template.html тем же способом,
-// что и render.js рендерит текстовые/фото-слайды (npx playwright screenshot), только
-// на сплошном chroma-key фоне вместо прозрачности — CLI-скриншот Playwright не отдаёт альфа-канал.
+// Assembles a carousel video slide: trim by duration, scale+crop to the target size
+// (the equivalent of CSS background-size:cover), overlay text via chroma key.
+// The overlay is a PNG rendered from templates/overlay-template.html the same way render.js
+// renders text/photo slides (npx playwright screenshot), just on a solid chroma-key
+// background instead of transparency — the Playwright CLI screenshot has no alpha channel.
 //
-// Использование:
-//   node render_video.js <входное_видео> <overlay.png> <output.mp4> [ширина=1080] [высота=1350] [старт_сек=0] [длительность_сек=8] [chromaKey=0xFF00FF]
+// Usage:
+//   node render_video.js <input_video> <overlay.png> <output.mp4> [width=1080] [height=1350] [start_sec=0] [duration_sec=8] [chromaKey=0xFF00FF]
 
 const { renderVideoSlide } = require('./lib');
 
@@ -14,7 +14,7 @@ function main() {
   const [, , input, overlay, output, widthArg, heightArg, startArg, durationArg, chromaArg] = process.argv;
 
   if (!input || !overlay || !output) {
-    console.error('Использование: node render_video.js <видео> <overlay.png> <output.mp4> [ширина=1080] [высота=1350] [старт=0] [длительность=8] [chromaKey=0xFF00FF]');
+    console.error('Usage: node render_video.js <video> <overlay.png> <output.mp4> [width=1080] [height=1350] [start=0] [duration=8] [chromaKey=0xFF00FF]');
     process.exit(1);
   }
 
@@ -25,7 +25,7 @@ function main() {
   const chromaKey = chromaArg || '0xFF00FF';
 
   const usedDuration = renderVideoSlide({ input, overlay, output, width, height, start, duration, chromaKey });
-  console.log(`Готово: ${output} (${width}x${height}, ${usedDuration}s)`);
+  console.log(`Done: ${output} (${width}x${height}, ${usedDuration}s)`);
 }
 
 main();
